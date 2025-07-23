@@ -3,9 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contact Nithin Enterprises - Battery Zone - Battery Shop Address & Phone in Arumbakkam, Chennai</title>
-    <meta name="description" content="Get in touch with Nithin Enterprises - Battery Zone in Arumbakkam, Chennai. Find our shop address, phone number, and email for all your battery needs.">
-    <meta name="google-site-verification" content="qeu7UN34pz6WROO8qsVl03edIxcFJXX5v-MF3PPEBpU" />
+    <title>Contact Nithin Enterprises - Battery Zone | Arumbakkam, Chennai - Battery Shop</title>
     <link rel="icon" href="/logo.png" type="image/png">
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
@@ -42,7 +40,7 @@
     <!-- EmailJS SDK CDN - IMPORTANT: Add this script -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
-      :where([class^="ri-"])::before { content: "\f3c2"; }
+      /* Removed: :where([class^="ri-"])::before { content: "\f3c2"; } - Remixicon should work without this custom override */
       .battery-container {
       position: relative;
       width: 200px;
@@ -273,6 +271,16 @@
           opacity: 1;
           transform: translateY(0);
       }
+      /* FIX: Mobile Menu Positioning */
+      #mobile-menu {
+          top: 0; /* Position at the very top of the viewport */
+          z-index: 51; /* Higher than header's z-50 to appear above it */
+          /* No need for padding-top here, it will be applied to the inner container */
+      }
+      /* Optional: Add a border-top to visually separate it from the header */
+      #mobile-menu.flex {
+          border-top: 1px solid #e2e8f0; /* Light gray border */
+      }
     </style>
   </head>
   <body class="bg-white min-h-screen relative overflow-x-hidden">
@@ -285,7 +293,7 @@
         class="container mx-auto px-4 py-4 flex justify-between items-center"
       >
         <div class="flex items-center">
-         <img src="logo.png" alt="PowerCell Logo" class="h-24 sm:h-32 md:h-40 object-contain" style="padding-right:40px" />
+         <img src="logo.png" alt="Nithin Battery Logo" class="h-24 sm:h-32 md:h-40 object-contain" style="padding-right:40px" />
           <nav class="hidden md:flex space-x-8">
             <a
               href="index.html"
@@ -315,8 +323,8 @@
     </header>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg fixed top-20 w-full z-40">
-      <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+    <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg fixed top-0 w-full z-51">
+      <div class="container mx-auto px-4 py-3 flex flex-col space-y-3 pt-24">
         <a href="index.html" class="text-gray-800 hover:text-primary font-medium py-2">Home</a>
         <a href="pro.html" class="text-gray-800 hover:text-primary font-medium py-2">Products</a>
        
@@ -576,7 +584,7 @@
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <img src="logo.png" alt="PowerCell Logo" class="h-24 sm:h-32 md:h-40 object-contain" style="padding-right:40px" />
+            <img src="logo.png" alt="Nithin Battery Logo" class="h-24 sm:h-32 md:h-40 object-contain" style="padding-right:40px" />
             <p class="text-gray-400 mt-4">
               Innovative solutions for a connected world. We're committed to
               providing the best experience for our customers.
