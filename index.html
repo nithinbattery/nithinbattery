@@ -12,9 +12,9 @@
 {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Nithin Enterprises - Battery Zone",  <-- ENSURE THIS IS EXACTLY "Nithin Battery"
+  "name": "Nithin Enterprises - Battery Zone",  
   "url": "https://nithinbattery.onrender.com/",
-  "logo": "https://nithinbattery.onrender.com/logo.png", <!-- Make sure this path to your Nithin Battery logo is correct and accessible -->
+  "logo": "https://nithinbattery.onrender.com/logo.png", 
   "contactPoint": {
     "@type": "ContactPoint",
     "telephone": "+91-73387-66086",
@@ -23,7 +23,7 @@
   "sameAs": [
     "https://www.justdial.com/Chennai/Nithin-Enterprises-Arumbakkam/044PXX44-XX44-230919102341-N7L6_BZDET",
     "https://www.indiamart.com/proddetail/nithin-enterprises.html"
-    <!-- Add other social media or directory links for Nithin Battery -->
+    
   ]
 }
 </script>
@@ -65,7 +65,7 @@
     />
     <style>
       /* Base styles for Remixicon */
-      :where([class^="ri-"])::before { content: "\f3c2"; }
+      /* Removed: :where([class^="ri-"])::before { content: "\f3c2"; } - This was causing a SyntaxError in some environments */
       body {
           font-family: 'Inter', sans-serif;
           scroll-behavior: smooth;
@@ -267,6 +267,17 @@
           justify-content: center;
           transition: opacity 0.2s ease; /* Smooth transition when toggling visibility */
       }
+
+      /* FIX: Mobile Menu Positioning */
+      #mobile-menu {
+          top: 0; /* Position at the very top of the viewport */
+          z-index: 51; /* Higher than header's z-50 to appear above it */
+          /* No need for padding-top here, it will be applied to the inner container */
+      }
+      /* Optional: Add a border-top to visually separate it from the header */
+      #mobile-menu.flex {
+          border-top: 1px solid #e2e8f0; /* Light gray border */
+      }
     </style>
   </head>
   <body class="bg-white">
@@ -280,7 +291,7 @@
         <div class="flex items-center">
           <img
             src="logo.png"
-            alt="PowerCell Logo"
+            alt="Nithin Battery Logo"
             class="h-24 sm:h-32 md:h-40 object-contain"
             style="padding-right: 40px"
           />
@@ -323,9 +334,9 @@
     <!-- Mobile Menu -->
     <div
       id="mobile-menu"
-      class="hidden md:hidden bg-white shadow-lg fixed top-20 w-full z-40"
+      class="hidden md:hidden bg-white shadow-lg fixed top-0 w-full z-51"
     >
-      <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+      <div class="container mx-auto px-4 py-3 flex flex-col space-y-3 pt-24">
         <a href="index.html" class="text-gray-800 hover:text-primary font-medium py-2"
           >Home</a
         >
@@ -347,7 +358,6 @@
 
     <!-- Hero Section -->
    
-  
 
     <!-- Special Offers Section -->
     <section class="py-20 bg-white pt-48">
@@ -1010,7 +1020,7 @@
             <!-- Login Form -->
             <form id="loginForm" class="space-y-6">
                 <div class="flex justify-center mb-6">
-                    <img src="logo.png" alt="App Logo" class="h-20 w-20 rounded-full border-4 border-white shadow-lg" />
+                    <img src="logo.png" alt="Nithin Battery Logo" class="h-20 w-20 rounded-full border-4 border-white shadow-lg" />
                 </div>
                 <h2 class="text-2xl font-bold text-white text-center mb-6">Nithin Battery</h2>
                 <div>
@@ -1035,7 +1045,7 @@
             <!-- Signup Form -->
             <form id="signupForm" class="space-y-6 hidden">
                 <div class="flex justify-center mb-6">
-                    <img src="logo.png" alt="App Logo" class="h-20 w-20 rounded-full border-4 border-white shadow-lg" />
+                    <img src="logo.png" alt="Nithin Battery Logo" class="h-20 w-20 rounded-full border-4 border-white shadow-lg" />
                 </div>
                 <h2 class="text-2xl font-bold text-white text-center mb-6">Nithin Battery</h2>
                 <div>
@@ -1060,7 +1070,7 @@
             <!-- Logged-in User View -->
             <div id="loggedInUserView" class="space-y-6 text-center text-white hidden">
                 <div class="flex justify-center mb-4">
-                    <img src="logo.png" alt="User Icon" class="h-20 w-20 rounded-full border-4 border-white shadow-lg" />
+                    <img src="logo.png" alt="Nithin Battery Logo" class="h-20 w-20 rounded-full border-4 border-white shadow-lg" />
                 </div>
                 <p class="text-xl font-semibold mb-2">Welcome,</p>
                 <p id="loggedInUserName" class="text-2xl font-bold break-words"></p>
