@@ -794,12 +794,6 @@
                     <input type="email" id="buyEmail" name="email" placeholder="your.email@example.com (optional)"
                            class="w-full buy-now-input">
                 </div>
-                <!-- New: GPay User Name input, conditionally visible -->
-                <div id="gpayUsernameInputContainer" class="hidden">
-                    <label for="gpayUsername" class="block text-sm font-medium text-gray-700 mb-1">GPay User Name</label>
-                    <input type="text" id="gpayUsername" name="gpayUsername" placeholder="Your GPay registered name"
-                           class="w-full buy-now-input">
-                </div>
                 <div>
                     <label for="buyAddress" class="block text-sm font-medium text-gray-700 mb-1">Delivery Address</label>
                     <textarea id="buyAddress" name="address" rows="3" required placeholder="Street, City, State, Zip Code"
@@ -808,33 +802,23 @@
 
                 <div class="space-y-3">
                     <h3 class="text-lg font-medium text-gray-700 mt-4 mb-2">Payment Option</h3>
+                    <!-- Only Cash on Delivery option remains -->
                     <label class="payment-option-label">
-                        <input type="radio" name="paymentOption" value="gpay" class="mr-2" checked>
-                        <span>GPay (Google Pay)</span>
-                    </label>
-                    <label class="payment-option-label">
-                        <input type="radio" name="paymentOption" value="cod" class="mr-2">
+                        <input type="radio" name="paymentOption" value="cod" class="mr-2" checked>
                         <span>Cash on Delivery</span>
                     </label>
                 </div>
 
                 <p id="buyNowError" class="text-red-500 text-sm text-center hidden"></p>
 
-                <div id="gpayQrCodeContainer" class="text-center mt-4 hidden">
-                    <p class="text-gray-700 mb-2">Scan with your GPay app to pay:</p>
-                    <img id="gpayQrCode" src="" alt="Scan to Pay with GPay" class="mx-auto w-40 h-40 border border-gray-300 rounded-lg p-2">
-                </div>
-
                 <div id="paymentButtons" class="flex justify-center mt-6">
-                    <button type="button" id="gpayButton" class="buy-now-button green-btn">
-                        Pay with GPay <span id="gpayAmount">₹0.00</span>
-                    </button>
-                    <button type="submit" id="codSubmitButton" class="buy-now-button primary-btn hidden">
+                    <!-- Only COD submit button remains -->
+                    <button type="submit" id="codSubmitButton" class="buy-now-button primary-btn">
                         Submit Order (Cash on Delivery)
                     </button>
                 </div>
 
-                <!-- New button for manual payment confirmation -->
+                <!-- New button for manual payment confirmation (hidden as GPay is removed) -->
                 <div class="flex justify-center mt-4">
                     <button type="button" id="confirmPaidButton" class="buy-now-button primary-btn hidden">
                         I have Paid / Confirm Order
@@ -1133,11 +1117,9 @@
       const buyName = document.getElementById('buyName');
       const buyPhone = document.getElementById('buyPhone');
       const buyEmail = document.getElementById('buyEmail');
-      const gpayUsernameInputContainer = document.getElementById('gpayUsernameInputContainer'); // New DOM element
-      const gpayUsername = document.getElementById('gpayUsername'); // New DOM element
+      // Removed gpayUsernameInputContainer and gpayUsername
       const buyAddress = document.getElementById('buyAddress');
-      const gpayButton = document.getElementById('gpayButton');
-      const gpayAmount = document.getElementById('gpayAmount');
+      // Removed gpayButton and gpayAmount
       const codSubmitButton = document.getElementById('codSubmitButton');
       const paymentOptions = document.querySelectorAll('input[name="paymentOption"]');
       const paymentButtons = document.getElementById('paymentButtons');
@@ -1145,8 +1127,7 @@
       const confirmationMessage = document.getElementById('confirmationMessage');
       const closeConfirmation = document.getElementById('closeConfirmation');
       const buyNowError = document.getElementById('buyNowError');
-      const gpayQrCodeContainer = document.getElementById('gpayQrCodeContainer');
-      const gpayQrCode = document.getElementById('gpayQrCode');
+      // Removed gpayQrCodeContainer and gpayQrCode
       const confirmPaidButton = document.getElementById('confirmPaidButton'); // New button for confirming payment
       const paymentFailed = document.getElementById('paymentFailed'); // New div for payment failure
       const failureMessage = document.getElementById('failureMessage'); // Message for payment failure
@@ -1354,88 +1335,29 @@
           paymentFailed.classList.add('hidden'); // Hide failure message
           buyNowError.classList.add('hidden');
           buyNowError.textContent = '';
-          // Reset payment option to GPay and show GPay button
-          document.querySelector('input[name="paymentOption"][value="gpay"]').checked = true;
-          gpayButton.classList.remove('hidden');
-          codSubmitButton.classList.add('hidden');
-          gpayQrCodeContainer.classList.add('hidden'); // Hide QR code container
+          // Set COD as default and hide GPay related elements
+          document.querySelector('input[name="paymentOption"][value="cod"]').checked = true;
+          codSubmitButton.classList.remove('hidden'); // Show COD button
           confirmPaidButton.classList.add('hidden'); // Hide confirm paid button
-          gpayUsernameInputContainer.classList.add('hidden'); // Hide GPay username input
-          gpayUsername.value = ''; // Clear GPay username input
           isCartCheckout = false; // Ensure flag is reset when modal is closed
       });
 
+      // Event listener for payment option change (only COD remains)
       paymentOptions.forEach(radio => {
           radio.addEventListener('change', (e) => {
-              if (e.target.value === 'gpay') {
-                  gpayButton.classList.remove('hidden');
-                  codSubmitButton.classList.add('hidden');
-                  gpayQrCodeContainer.classList.remove('hidden'); // Show QR code container
-                  confirmPaidButton.classList.add('hidden'); // Hide confirm button initially for GPay
-                  gpayUsernameInputContainer.classList.remove('hidden'); // Show GPay username input
-                  generateGPayQrCode(); // Generate QR code immediately
-              } else { // COD selected
-                  gpayButton.classList.add('hidden');
+              // Since only COD remains, we just ensure COD button is visible
+              if (e.target.value === 'cod') {
                   codSubmitButton.classList.remove('hidden');
-                  gpayQrCodeContainer.classList.add('hidden'); // Hide QR code container
-                  confirmPaidButton.classList.add('hidden'); // Hide confirm button for COD
-                  gpayUsernameInputContainer.classList.add('hidden'); // Hide GPay username input
+                  confirmPaidButton.classList.add('hidden'); // Always hide confirm paid for COD
               }
           });
       });
 
-      // Function to generate and display GPay QR code
-      function generateGPayQrCode() {
-          const amount = isCartCheckout ? window.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2) : (currentProductForBuy ? currentProductForBuy.price.toFixed(2) : '0.00');
-          const transactionNote = isCartCheckout ? `Payment for items in your Nithin Battery cart` : `Payment for ${currentProductForBuy ? currentProductForBuy.name : 'product'} from Nithin Battery`;
-
-          const myGPayId = 'ushanatarajan1411-1@okicici'; // Your GPay UPI ID
-          const myGPayName = 'Usha Natarajan'; // Your name for GPay
-
-          const gpayUri = `upi://pay?pa=${myGPayId}&pn=${encodeURIComponent(myGPayName)}&mc=0000&tid=TEST${Date.now()}&tr=TEST${Date.now()}&tn=${encodeURIComponent(transactionNote)}&am=${amount}&cu=INR`;
-
-          const qrCodeApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(gpayUri)}`;
-          gpayQrCode.src = qrCodeApiUrl;
-          gpayAmount.textContent = `₹${amount}`; // Update amount on GPay button
-      }
-
-
-      gpayButton.addEventListener('click', async () => {
-          // Basic validation
-          if (!buyNowForm.checkValidity()) {
-              buyNowError.textContent = 'Please fill in all required fields correctly.';
-              buyNowError.classList.remove('hidden');
-              buyNowForm.reportValidity(); // Show browser's validation messages
-              return;
-          }
-          buyNowError.classList.add('hidden'); // Hide error if validation passes
-
-          // Check if Firebase Firestore is initialized
-          if (!window.myAppFirebase.db) {
-              displayMessage("Firebase is not ready. Please try again later.", "error");
-              console.error("Firestore object is not initialized. Cannot save order.");
-              return;
-          }
-
-          // Ensure QR code and instructions are visible
-          gpayQrCodeContainer.classList.remove('hidden');
-
-          // Hide the "Pay with GPay" button and show "I have Paid" button
-          gpayButton.classList.add('hidden');
-          confirmPaidButton.classList.remove('hidden');
-          displayMessage("Please complete payment in GPay app. Then, return here and click 'I have Paid / Confirm Order'.", "info", 10000); // Increased duration for message
-
-          // Attempt to open GPay app directly upon clicking "Pay with GPay"
-          const amount = isCartCheckout ? window.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2) : (currentProductForBuy ? currentProductForBuy.price.toFixed(2) : '0.00');
-          const transactionNote = isCartCheckout ? `Payment for items in your Nithin Battery cart` : `Payment for ${currentProductForBuy ? currentProductForBuy.name : 'product'} from Nithin Battery`;
-          const myGPayId = 'muthu19909-2@okaxis'; // Your GPay UPI ID
-          const myGPayName = 'ESAKKI MUTHU'; // Your name for GPay
-          const gpayUri = `upi://pay?pa=${myGPayId}&pn=${encodeURIComponent(myGPayName)}&mc=0000&tid=TEST${Date.now()}&tr=TEST${Date.now()}&tn=${encodeURIComponent(transactionNote)}&am=${amount}&cu=INR`;
-          window.open(gpayUri, '_blank'); // Open GPay app in a new tab/window
-      });
+      // Removed gpayButton.addEventListener as GPay is no longer an option
 
       confirmPaidButton.addEventListener('click', async () => {
-          // This is where we assume the user has paid and proceed to save the order
+          // This button should ideally not be visible if GPay is removed,
+          // but the logic is kept for robustness in case it's somehow triggered.
           buyNowForm.classList.add('hidden');
 
           const orderId = `ORDER-${Date.now()}`;
@@ -1459,17 +1381,9 @@
               timestamp: new Date().toISOString()
           };
 
-          if (selectedPaymentOption === 'gpay') {
-              // Get the trimmed value; if the element is null or value is undefined/null, default to empty string.
-              const gpayUserVal = (gpayUsername && gpayUsername.value !== undefined && gpayUsername.value !== null) ? gpayUsername.value.trim() : '';
-
-              // Assign the value. If it's an empty string, it will be saved as null.
-              orderData.gpayUsername = gpayUserVal === '' ? null : gpayUserVal;
-          } else {
-              // If paymentOption is not 'gpay', explicitly set gpayUsername to null
-              orderData.gpayUsername = null;
-          }
-
+          // gpayUsername is removed, so it's always null
+          orderData.gpayUsername = null;
+          
           if (isCartCheckout) {
               orderData.products = window.cart.map(item => ({
                   id: item.id,
@@ -1593,17 +1507,9 @@
               timestamp: new Date().toISOString()
           };
 
-          if (selectedPaymentOption === 'gpay') {
-              // Get the trimmed value; if the element is null or value is undefined/null, default to empty string.
-              const gpayUserVal = (gpayUsername && gpayUsername.value !== undefined && gpayUsername.value !== null) ? gpayUsername.value.trim() : '';
-
-              // Assign the value. If it's an empty string, it will be saved as null.
-              orderData.gpayUsername = gpayUserVal === '' ? null : gpayUserVal;
-          } else {
-              // If paymentOption is not 'gpay', explicitly set gpayUsername to null
-              orderData.gpayUsername = null;
-          }
-
+          // gpayUsername is removed, so it's always null
+          orderData.gpayUsername = null;
+          
           if (isCartCheckout) {
               orderData.products = window.cart.map(item => ({
                   id: item.id,
@@ -1685,13 +1591,10 @@
           paymentFailed.classList.add('hidden'); // Hide failure message
           buyNowError.classList.add('hidden');
           buyNowError.textContent = '';
-          document.querySelector('input[name="paymentOption"][value="gpay"]').checked = true;
-          gpayButton.classList.remove('hidden');
-          codSubmitButton.classList.add('hidden');
-          gpayQrCodeContainer.classList.add('hidden'); // Hide QR code container
-          confirmPaidButton.classList.add('hidden'); // Hide confirm paid button
-          gpayUsernameInputContainer.classList.add('hidden'); // Hide GPay username input
-          gpayUsername.value = ''; // Clear GPay username input
+          // Set COD as default and hide GPay related elements
+          document.querySelector('input[name="paymentOption"][value="cod"]').checked = true;
+          codSubmitButton.classList.remove('hidden');
+          confirmPaidButton.classList.add('hidden');
           isCartCheckout = false; // Ensure flag is reset when confirmation is closed
       });
 
@@ -1704,13 +1607,10 @@
           paymentFailed.classList.add('hidden'); // Hide failure message
           buyNowError.classList.add('hidden');
           buyNowError.textContent = '';
-          document.querySelector('input[name="paymentOption"][value="gpay"]').checked = true;
-          gpayButton.classList.remove('hidden');
-          codSubmitButton.classList.add('hidden');
-          gpayQrCodeContainer.classList.add('hidden'); // Hide QR code container
-          confirmPaidButton.classList.add('hidden'); // Hide confirm paid button
-          gpayUsernameInputContainer.classList.add('hidden'); // Hide GPay username input
-          gpayUsername.value = ''; // Clear GPay username input
+          // Set COD as default and hide GPay related elements
+          document.querySelector('input[name="paymentOption"][value="cod"]').checked = true;
+          codSubmitButton.classList.remove('hidden');
+          confirmPaidButton.classList.add('hidden');
           isCartCheckout = false; // Ensure flag is reset when confirmation is closed
       });
 
@@ -2273,16 +2173,10 @@
           buyNowError.classList.add('hidden');
           buyNowError.textContent = '';
 
-          // Set GPay as default selected option and show its elements
-          document.querySelector('input[name="paymentOption"][value="gpay"]').checked = true;
-          gpayButton.classList.remove('hidden'); // Show GPay button
-          codSubmitButton.classList.add('hidden'); // Hide COD button
+          // Set COD as default selected option and show its elements
+          document.querySelector('input[name="paymentOption"][value="cod"]').checked = true;
+          codSubmitButton.classList.remove('hidden'); // Show COD button
           confirmPaidButton.classList.add('hidden'); // Hide confirm paid button
-          gpayQrCodeContainer.classList.remove('hidden'); // Show QR code container
-          gpayUsernameInputContainer.classList.remove('hidden'); // Show GPay username input
-          gpayUsername.value = ''; // Clear GPay username input
-
-          generateGPayQrCode(); // Generate QR code immediately
 
           buyNowModal.classList.remove('hidden');
       }
@@ -2313,15 +2207,9 @@
           buyNowError.classList.add('hidden');
           buyNowError.textContent = '';
 
-          document.querySelector('input[name="paymentOption"][value="gpay"]').checked = true;
-          gpayButton.classList.remove('hidden'); // Show GPay button
-          codSubmitButton.classList.add('hidden'); // Hide COD button
+          document.querySelector('input[name="paymentOption"][value="cod"]').checked = true;
+          codSubmitButton.classList.remove('hidden'); // Show COD button
           confirmPaidButton.classList.add('hidden'); // Hide confirm paid button
-          gpayQrCodeContainer.classList.remove('hidden'); // Show QR code container
-          gpayUsernameInputContainer.classList.remove('hidden'); // Show GPay username input
-          gpayUsername.value = ''; // Clear GPay username input
-
-          generateGPayQrCode(); // Generate QR code immediately
 
           buyNowModal.classList.remove('hidden');
           cartSidebar.classList.remove("translate-x-0"); // Close cart sidebar
